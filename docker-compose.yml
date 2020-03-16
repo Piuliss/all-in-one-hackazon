@@ -1,0 +1,22 @@
+# also called local.ymml
+version: '3'
+
+services:
+  app:
+    build:
+      context: '.'
+      dockerfile: './Dockerfile'
+    image: 'fiuni_hackazon'
+    expose:
+      - "80"
+      - "8080"
+      - "3306"
+    ports:
+      - '127.0.0.1:80:80'
+      - '127.0.0.1:8080:8080'
+      - '127.0.0.1:3306:3306'
+    volumes:
+      - 'fiuni_hackazon_mysqldata:/var/lib/mysql'
+
+volumes:
+  fiuni_hackazon_mysqldata:
