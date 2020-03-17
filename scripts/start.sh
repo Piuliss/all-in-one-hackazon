@@ -7,11 +7,6 @@ sleep 10s
 # Here we generate random passwords
 HASHED_PASSWORD=`php /passwordHash.php $HACKAZON_PASSWORD`
 
-#This is so the passwords show up in logs. 
-echo hackazon password: $HACKAZON_PASSWORD
-echo $MYSQL_PASSWORD > /mysql-root-pw.txt
-echo $HACKAZON_PASSWORD > /hackazon-db-pw.txt
-
 #set DB password in db.php
 sed -i "s/yourdbpass/$HACKAZON_PASSWORD/" /var/www/hackazon/assets/config/db.php
 sed -i "s/youradminpass/$HACKAZON_PASSWORD/" /var/www/hackazon/assets/config/parameters.php
