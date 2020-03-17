@@ -1,7 +1,7 @@
 <?php
 return array (
   'host' => 'http://hackazon.com',
-  'display_errors' => false,
+  'display_errors' => true,
   'use_perl_upload' => false,
   'use_external_dir' => false,
   'user_pictures_external_dir' => '/lib/init/rw',
