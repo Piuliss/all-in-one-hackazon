@@ -2,11 +2,11 @@
 version: '3'
 
 services:
-  app:
+  fiuni_hackazon:
     build:
       context: '.'
       dockerfile: './Dockerfile'
-    image: 'fiuni_hackazon'
+    image: '127.0.0.1:5000/fiuni_hackazon'
     expose:
       - "80"
       - "8080"
