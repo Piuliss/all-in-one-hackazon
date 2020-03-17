@@ -34,3 +34,4 @@
 *.iml
 out
 gen
+.env
