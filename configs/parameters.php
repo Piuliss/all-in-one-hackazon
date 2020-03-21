@@ -6,7 +6,7 @@ return array (
   'use_external_dir' => false,
   'user_pictures_external_dir' => '/lib/init/rw',
   'user_pictures_path' => '/web/user_pictures/',
-  'common_path' => '/var/www/hackazon/assets/views/common/',
+  'common_path' => '/var/www/pointview/assets/views/common/',
   'annotation_length' => 900,
   'rest_in_profile' => false,
   'profile_rest_data_type' => 'xml',

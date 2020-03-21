@@ -15,16 +15,16 @@ RUN rm -rf /var/www/
 ADD https://github.com/Piuliss/hackazon/archive/master.zip /hackazon-master.zip
 RUN unzip /hackazon-master.zip -d hackazon
 RUN mkdir /var/www/
-RUN mv /hackazon/hackazon-master/ /var/www/hackazon
-RUN cp /var/www/hackazon/assets/config/db.sample.php /var/www/hackazon/assets/config/db.php
-RUN cp /var/www/hackazon/assets/config/email.sample.php /var/www/hackazon/assets/config/email.php
-ADD ./configs/parameters.php /var/www/hackazon/assets/config/parameters.php
-ADD ./configs/rest.php /var/www/hackazon/assets/config/rest.php
-ADD ./configs/createdb.sql /var/www/hackazon/database/createdb.sql
+RUN mv /hackazon/hackazon-master/ /var/www/pointview
+RUN cp /var/www/pointview/assets/config/db.sample.php /var/www/pointview/assets/config/db.php
+RUN cp /var/www/pointview/assets/config/email.sample.php /var/www/pointview/assets/config/email.php
+ADD ./configs/parameters.php /var/www/pointview/assets/config/parameters.php
+ADD ./configs/rest.php /var/www/pointview/assets/config/rest.php
+ADD ./configs/createdb.sql /var/www/pointview/database/createdb.sql
 RUN chown -R www-data:www-data /var/www/
-RUN chown -R www-data:www-data /var/www/hackazon/web/products_pictures/
-RUN chown -R www-data:www-data /var/www/hackazon/web/upload
-RUN chown -R www-data:www-data /var/www/hackazon/assets/config
+RUN chown -R www-data:www-data /var/www/pointview/web/products_pictures/
+RUN chown -R www-data:www-data /var/www/pointview/web/upload
+RUN chown -R www-data:www-data /var/www/pointview/assets/config
 RUN chmod 755 /start.sh
 RUN chmod 755 /etc/apache2/foreground.sh
 RUN a2enmod rewrite 
