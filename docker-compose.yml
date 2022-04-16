@@ -2,7 +2,7 @@
 version: '3'
 
 services:
-  fiuni_hackazon:
+  web:
     build:
       context: '.'
       dockerfile: './Dockerfile'
@@ -18,7 +18,7 @@ services:
       - '0.0.0.0:8080:8080'
       - '0.0.0.0:3306:3306'
     volumes:
-      - 'fiuni_hackazon_mysqldata:/var/lib/mysql'
+      - 'web_mysqldata:/var/lib/mysql'
 
 volumes:
-  fiuni_hackazon_mysqldata:
+  web_mysqldata:
