@@ -1,33 +1,49 @@
 FROM ubuntu:14.04
-MAINTAINER Raul Benitez <raulbeni@gmail.com>
-RUN apt-get update
-RUN apt-get -y upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-client-5.6 mysql-server-5.6 apache2 libapache2-mod-php5 pwgen python-setuptools vim-tiny php5-mysql  php5-ldap unzip
+LABEL maintainer="Raul Benitez <raulbeni@gmail.com>"
 
-# setup hackazon
-RUN apt-get install -y supervisor
-ADD ./scripts/start.sh /start.sh
-ADD ./scripts/passwordHash.php /passwordHash.php
-ADD ./scripts/foreground.sh /etc/apache2/foreground.sh
-ADD ./configs/supervisord.conf /etc/supervisord.conf
-ADD ./configs/000-default.conf /etc/apache2/sites-available/000-default.conf
-RUN rm -rf /var/www/
-ADD https://github.com/Piuliss/hackazon/archive/master.zip /hackazon-master.zip
-RUN unzip /hackazon-master.zip -d hackazon
-RUN mkdir /var/www/
-RUN mv /hackazon/hackazon-master/ /var/www/pointview
-RUN cp /var/www/pointview/assets/config/db.sample.php /var/www/pointview/assets/config/db.php
-RUN cp /var/www/pointview/assets/config/email.sample.php /var/www/pointview/assets/config/email.php
-ADD ./configs/parameters.php /var/www/pointview/assets/config/parameters.php
-ADD ./configs/rest.php /var/www/pointview/assets/config/rest.php
-ADD ./configs/createdb.sql /var/www/pointview/database/createdb.sql
-RUN chown -R www-data:www-data /var/www/
-RUN chown -R www-data:www-data /var/www/pointview/web/products_pictures/
-RUN chown -R www-data:www-data /var/www/pointview/web/upload
-RUN chown -R www-data:www-data /var/www/pointview/assets/config
-RUN chmod 755 /start.sh
-RUN chmod 755 /etc/apache2/foreground.sh
-RUN a2enmod rewrite
+# Install all packages in one layer and clean up
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    mysql-client-5.6 \
+    mysql-server-5.6 \
+    apache2 \
+    libapache2-mod-php5 \
+    pwgen \
+    python-setuptools \
+    vim-tiny \
+    php5-mysql \
+    php5-ldap \
+    unzip \
+    supervisor \
+    wget \
+    ca-certificates && \
+    a2enmod rewrite && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Setup Apache and directories
+RUN rm -rf /var/www/ && \
+    mkdir -p /var/www/pointview/web/products_pictures/ /var/www/pointview/web/upload /var/www/pointview/assets/config
+
+# Copy configuration files
+COPY ./scripts/start.sh /start.sh
+COPY ./scripts/passwordHash.php /passwordHash.php
+COPY ./scripts/foreground.sh /etc/apache2/foreground.sh
+COPY ./configs/supervisord.conf /etc/supervisord.conf
+COPY ./configs/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./configs/parameters.php /var/www/pointview/assets/config/parameters.php
+COPY ./configs/rest.php /var/www/pointview/assets/config/rest.php
+COPY ./configs/createdb.sql /var/www/pointview/database/createdb.sql
+
+# Download and extract Hackazon in one step
+RUN wget -q https://github.com/Piuliss/hackazon/archive/master.zip -O /tmp/hackazon.zip && \
+    unzip /tmp/hackazon.zip -d /tmp && \
+    cp -r /tmp/hackazon-master/* /var/www/pointview/ && \
+    cp /var/www/pointview/assets/config/db.sample.php /var/www/pointview/assets/config/db.php && \
+    cp /var/www/pointview/assets/config/email.sample.php /var/www/pointview/assets/config/email.php && \
+    rm -rf /tmp/hackazon* && \
+    chmod 755 /start.sh /etc/apache2/foreground.sh && \
+    chown -R www-data:www-data /var/www/
 
 EXPOSE 80
 CMD ["/bin/bash", "/start.sh"]
