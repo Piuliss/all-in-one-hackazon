@@ -8,6 +8,7 @@ RUN apt-get update && \
     mysql-server-5.6 \
     apache2 \
     libapache2-mod-php5 \
+    php5-cli \  # Added PHP CLI package
     pwgen \
     python-setuptools \
     vim-tiny \
