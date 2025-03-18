@@ -42,8 +42,14 @@ RUN wget -q https://github.com/Piuliss/hackazon/archive/master.zip -O /tmp/hacka
     cp /var/www/pointview/assets/config/db.sample.php /var/www/pointview/assets/config/db.php && \
     cp /var/www/pointview/assets/config/email.sample.php /var/www/pointview/assets/config/email.php && \
     rm -rf /tmp/hackazon* && \
-    chmod 755 /start.sh /etc/apache2/foreground.sh && \
-    chown -R www-data:www-data /var/www/
+    mkdir -p /var/www/pointview/assets/config/vuln/ && \
+    chmod 755 /start.sh /etc/apache2/foreground.sh
+
+# Copy vuln directory contents and overwrite destination
+COPY ./configs/vuln/ /var/www/pointview/assets/config/vuln/
+
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/
 
 EXPOSE 80
 CMD ["/bin/bash", "/start.sh"]
