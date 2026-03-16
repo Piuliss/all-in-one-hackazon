@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: '.'
+      dockerfile: './Dockerfile'
+    image: 'fiuni_hackazon_prod'
+    container_name: eshop_web_prod
+    restart: always
+    env_file:
+      - '.env'
+    expose:
+      - "80"
+      - "3306"
+    volumes:
+      - 'web_mysqldata_prod:/var/lib/mysql'
+    networks:
+      - eshop_network_prod
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_proxy"
+
+      - "traefik.http.routers.eshop.rule=Host(`eshop.rbnetto.dev`)"
+      - "traefik.http.routers.eshop.entrypoints=websecure"
+      - "traefik.http.routers.eshop.tls.certresolver=letsencrypt"
+
+      - "traefik.http.services.eshop.loadbalancer.server.port=80"
+      - "traefik.http.services.eshop.loadbalancer.server.scheme=http"
+
+      - "traefik.http.routers.eshop-redirect.rule=Host(`eshop.rbnetto.dev`)"
+      - "traefik.http.routers.eshop-redirect.entrypoints=web"
+      - "traefik.http.routers.eshop-redirect.middlewares=eshop-redirect-to-https"
+
+      - "traefik.http.middlewares.eshop-redirect-to-https.redirectscheme.scheme=https"
+
+volumes:
+  web_mysqldata_prod:
+
+networks:
+  eshop_network_prod:
+    name: eshop_network_prod
+  traefik_proxy:
+    external: true
+    name: traefik_proxy
+
