@@ -6,7 +6,7 @@ services:
       context: '.'
       dockerfile: './Dockerfile'
     image: 'fiuni_hackazon_prod'
-    container_name: eshop_web_prod
+    container_name: pointofview_web_prod
     restart: always
     env_file:
       - '.env'
@@ -16,31 +16,31 @@ services:
     volumes:
       - 'web_mysqldata_prod:/var/lib/mysql'
     networks:
-      - eshop_network_prod
+      - pointofview_network_prod
       - traefik_proxy
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_proxy"
 
-      - "traefik.http.routers.eshop.rule=Host(`eshop.rbnetto.dev`)"
-      - "traefik.http.routers.eshop.entrypoints=websecure"
-      - "traefik.http.routers.eshop.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.pointofview.rule=Host(`pointofview.rbnetto.dev`)"
+      - "traefik.http.routers.pointofview.entrypoints=websecure"
+      - "traefik.http.routers.pointofview.tls.certresolver=letsencrypt"
 
-      - "traefik.http.services.eshop.loadbalancer.server.port=80"
-      - "traefik.http.services.eshop.loadbalancer.server.scheme=http"
+      - "traefik.http.services.pointofview.loadbalancer.server.port=80"
+      - "traefik.http.services.pointofview.loadbalancer.server.scheme=http"
 
-      - "traefik.http.routers.eshop-redirect.rule=Host(`eshop.rbnetto.dev`)"
-      - "traefik.http.routers.eshop-redirect.entrypoints=web"
-      - "traefik.http.routers.eshop-redirect.middlewares=eshop-redirect-to-https"
+      - "traefik.http.routers.pointofview-redirect.rule=Host(`pointofview.rbnetto.dev`)"
+      - "traefik.http.routers.pointofview-redirect.entrypoints=web"
+      - "traefik.http.routers.pointofview-redirect.middlewares=pointofview-redirect-to-https"
 
-      - "traefik.http.middlewares.eshop-redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.pointofview-redirect-to-https.redirectscheme.scheme=https"
 
 volumes:
   web_mysqldata_prod:
 
 networks:
-  eshop_network_prod:
-    name: eshop_network_prod
+  pointofview_network_prod:
+    name: pointofview_network_prod
   traefik_proxy:
     external: true
     name: traefik_proxy
